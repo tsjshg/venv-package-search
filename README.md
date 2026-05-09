@@ -21,6 +21,14 @@ python3 app.py
 ```
 Open the web borwser with http://localhost:8765.
 
+## API
+
+You can use API style like this.
+
+```shell
+curl http://localhost:8765/api/search\?q\=polars
+```
+
 ## Limitations
 
 Tested only on macOS. Unix-like OS are probably OK. 
