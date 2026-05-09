@@ -4,7 +4,7 @@ Web app for searching packages in your Python virtual environment. Created by Cl
 
 ## Setup
 
-Download the app.py and locate it to your HOME directory. Then modify the following to fit your environment.
+Download the app.py and modify the following to fit your environment.
 
 ```python
 VENV_SEARCH_DIRS = [
@@ -17,7 +17,7 @@ VENV_SEARCH_DIRS = [
 ## Run
 
 ```shell
-~$ python3 app.py
+python3 app.py
 ```
 Open the web borwser with http://localhost:8765.
 
