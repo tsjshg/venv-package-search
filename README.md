@@ -23,11 +23,8 @@ Open the web borwser with http://localhost:8765.
 
 ## API
 
-You can use API style like this.
+You can use API style like this http://localhost:8765/api/search?q=polars
 
-```shell
-curl http://localhost:8765/api/search\?q\=polars
-```
 
 ## Limitations
 
