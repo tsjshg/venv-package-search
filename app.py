@@ -180,12 +180,12 @@ function render(data, query) {
   setStatus('Found in ' + data.length + ' virtual environment' + (data.length > 1 ? 's' : ''), 'found');
   results.innerHTML = data.map(r => `
     <div class="card">
-      <span class="venv-name">${esc(r.venv)}</span>
+      <span class="venv-name">${esc(r.package)}</span>
       <span class="badges">
         <span class="pkg-version">${esc(r.version)}</span>
         <span class="py-version">py ${esc(r.python)}</span>
       </span>
-      <span class="venv-path">${esc(r.path)}</span>
+      <span class="venv-path">${esc(r.venv)} &mdash; ${esc(r.path)}</span>
     </div>`).join('');
 }
 
@@ -219,12 +219,16 @@ input.addEventListener('input', () => {
 def find_venvs():
     """Return list of (name, base_path) for all detected virtual environments."""
     venvs = []
+    seen = set()
     for search_dir in VENV_SEARCH_DIRS:
         if not os.path.isdir(search_dir):
             continue
         for entry in sorted(os.scandir(search_dir), key=lambda e: e.name):
             if entry.is_dir() and os.path.isdir(os.path.join(entry.path, "lib")):
-                venvs.append((entry.name, entry.path, search_dir))
+                real = os.path.realpath(entry.path)
+                if real not in seen:
+                    seen.add(real)
+                    venvs.append((entry.name, entry.path, search_dir))
     return venvs
 
 
@@ -265,10 +269,15 @@ def load_packages():
         if not sp:
             continue
         py_version = get_python_version(venv_path)
+        seen_in_venv = set()
         for entry in os.scandir(sp):
             m = re.match(r"^(.+?)-([^-]+)\.dist-info$", entry.name)
             if m and entry.is_dir():
                 pkg = m.group(1).lower().replace("-", "_").replace(".", "_")
+                key = (venv_path, pkg)
+                if key in seen_in_venv:
+                    continue
+                seen_in_venv.add(key)
                 version = m.group(2)
                 display_name = m.group(1)
                 index.setdefault(pkg, []).append({
@@ -299,6 +308,7 @@ class Handler(BaseHTTPRequestHandler):
                     for e in entries:
                         results.append({
                             "venv": e["venv"],
+                            "package": e["display"],
                             "version": e["version"],
                             "path": e["path"],
                             "python": e["python"],
