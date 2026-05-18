@@ -180,12 +180,12 @@ function render(data, query) {
   setStatus('Found in ' + data.length + ' virtual environment' + (data.length > 1 ? 's' : ''), 'found');
   results.innerHTML = data.map(r => `
     <div class="card">
-      <span class="venv-name">${esc(r.package)}</span>
+      <span class="venv-name">${esc(r.venv)}</span>
       <span class="badges">
         <span class="pkg-version">${esc(r.version)}</span>
         <span class="py-version">py ${esc(r.python)}</span>
       </span>
-      <span class="venv-path">${esc(r.venv)} &mdash; ${esc(r.path)}</span>
+      <span class="venv-path">${esc(r.package)} &mdash; ${esc(r.path)}</span>
     </div>`).join('');
 }
 
